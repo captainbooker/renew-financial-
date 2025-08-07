@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Simple CLI for the War card-game engine.
+#
+# Usage examples
+#   ./bin/play_war Alice Bob            # 2-player game
+#   ./bin/play_war Alice Bob Carol      # 3 players
+#   ./bin/play_war -v -c 50k A B C D    # verbose, custom round-cap
+#
+# Options
+#   -v, --verbose           show every round’s result
+#   -c, --round-cap=N       maximum rounds before declaring a draw (default: 10_000)
+#   -h, --help              display help
+
+require "optparse"
+require_relative "../lib/war_game"
+
+options = { verbose: false, round_cap: 10_000 }
+OptionParser.new do |opts|
+  opts.banner = "Usage: play_war [options] PLAYER1 PLAYER2 [PLAYER3 PLAYER4]"
+
+  opts.on("-v", "--verbose", "Show round-by-round output") { options[:verbose] = true }
+  opts.on("-cN", "--round-cap=N", Integer,
+          "Max rounds before forced stop (default: #{options[:round_cap]})") { |n| options[:round_cap] = n }
+  opts.on("-h", "--help", "Print this help and exit") { puts opts; exit }
+end.parse!
+
+names = ARGV
+unless (2..4).cover?(names.size)
+  abort "⛔  Provide 2–4 player names.\nExample: ./bin/play_war Alice Bob"
+end
+
+game   = WarGame::Game.new(names)
+winner = game.play(verbose: options[:verbose], round_cap: options[:round_cap])
+
+if winner
+  puts "\n🏆  #{winner.name} wins WAR after #{game.rounds_played} rounds "\
+       "with #{winner.deck.size} cards!"
+else
+  puts "\n🤝  No winner after #{options[:round_cap]} rounds — game declared a draw."
+end
