@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module WarGame
   class Game
     attr_reader :players, :rounds_played

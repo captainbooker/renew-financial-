@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module WarGame
   class Player
     attr_reader :name, :deck
