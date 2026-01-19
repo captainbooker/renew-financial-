@@ -28,6 +28,6 @@ ruby "3.3.5"
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
 
-gem "pry-byebug", "~> 3.11", groups: [ :development, :test ]
+gem "pry-byebug", "~> 3.12", groups: [ :development, :test ]
 
 gem "rubocop-rails", require: false
